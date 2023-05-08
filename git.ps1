@@ -1,7 +1,7 @@
 $nombre_usuario = Read-Host 'Nombre de usuario de Git'
 $token = Read-Host 'Token de Git'
 
-    winget install Git.Git -h
+winget install Git.Git -h
 
 #
 # Configuración de Git.

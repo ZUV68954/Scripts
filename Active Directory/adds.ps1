@@ -1,3 +1,7 @@
+#
+# Configuración como controlador de dominio.
+#
+
 $dominio = Read-Host 'Nombre de dominio: '
 
 Import-Module ADDSDeployment
