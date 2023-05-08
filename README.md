@@ -2,9 +2,9 @@
 
 ## Equipo local
 
-* ("`git.ps1`"): Configuración de Git en el equipo local.
+* **git.ps1`**: Configuración de Git en el equipo local.
 
 
 ## Active Directory
 
-* ("`adds.ps1`"): Unir un controlador al dominio.
+* **adds.ps1**: Unir un controlador al dominio.
