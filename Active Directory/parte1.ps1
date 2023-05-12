@@ -19,14 +19,3 @@ Add-Computer -ComputerName $hostname -DomainName $dominio -NewName $nombre -Cred
 
 Write-Output "Añadido al dominio $dominio."
 Start-Sleep -Seconds 5
-
-#
-## Crear tarea
-#
-
-$action = New-ScheduledTaskAction -Execute "powershell.exe" -ExecutionPolicy Bypass -File 'C:\Users\Administrator\Documents\part2.ps1'
-$trigger = New-ScheduledTaskTrigger -AtLogon
-$settings = New-ScheduledTaskSettingsSet
-$Trigger.Delay = "PT5S"
-$task = New-ScheduledTask -Action $action -Principal $principal -Trigger $trigger -Settings $settings
-Register-ScheduledTask -TaskName "part2" -InputObject $task
