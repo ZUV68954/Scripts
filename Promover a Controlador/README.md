@@ -4,11 +4,12 @@
 
 En primer lugar crearemos una máquina nueva que será el futuro controlador de dominio principal. El nombre será **DC03-01.wargamesX**. Mantendremos la configuración por defecto que vCenter sugiere para Windows Server 2016 o versiones posteriores pero cambiando las opciones de disco duro a **aprovisionamiento fino** y la red a **PG-VLAN20**. Utilizaremos la última ISO del almacén para Windows Server 2022.
 
+<img src="../doc/Server-Core/creacion-maquina.jpg" alt="Imagen de las características de la máquina" width="320">
 [Imagen de las características de la máquina](../doc/Server-Core/creacion-maquina.jpg)
 
 Arrancaremos desde la imagen y cambiaremos la distribución de teclado, presionaremos Install, diremos que no tenemos clave de producto, elegiremos la versión **Windows Server 2022 Standard**, elegiremos la opción personalizada y el disco en el que se instalará Windows.
 
-![Teclado](../doc/Server-Core/creacion-maquina.jpg)
+![Teclado](../doc/Server-Core/teclado.jpg)
 
 ![Edición](../doc/Server-Core/edicion.jpg)
 
@@ -33,7 +34,22 @@ Una vez ahí elegiremos la interfaz, que queremos configurar escribiendo su núm
 
 Ahí veremos tres opciones, la primera es para asignar **IP**, **máscara de red** y **puerta de enlace**, deberemos seleccionar la opción de IP estática. La configuración que he elegido yo ha sido:
 
-| IP        | Máscara de Red           | Gateway  |
+| **IP**        | **Máscara de Red**           | **Gateway**  |
 | ------------- |:-------------:| -----:|
 | 172.20.10.22      | 255.255.255.0 | 172.20.10.1 |
 
+Luego en la segunda opción, elegiremos como servidores DNS a los controladores de dominio ya existentes, **si no lo hacemos la máquina no podrá resolver el dominio ni unirse a él.**
+
+
+### Escritorio Remoto
+
+La configuración del escritorio remoto será tanto de lo mismo, presionaremos en el siguiente orden *7 > Intro > e > Intro > 2 > Intro > Intro*.
+
+
+### VMware Tools
+
+Presionaremos en *Instalar VMware Tools…* en vCenter, esto nos montará el disco de las tools.
+[VMware Tools](../doc/Server-Core/tools.jpg)
+
+
+Ahora en 
