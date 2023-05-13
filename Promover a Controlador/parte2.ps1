@@ -18,4 +18,4 @@ Install-ADDSDomainController `
  -InstallDns:$true
 
 Write-Output "Configurado como controlador de dominio en $dominio."
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 3
