@@ -15,3 +15,25 @@ Arrancaremos desde la imagen y cambiaremos la distribución de teclado, presiona
 ![Personalizada](../doc/Server-Core/personalizada.png)
 
 ![Disco](../doc/Server-Core/disco.jpg)
+
+
+## Post-Instalación
+
+Una vez terminada la instalación, habrá que coonfigurar la red, habilitar el escritorio remoto (para poder subir los scripts) e instalar las Tools de VMware.
+
+Windows Server Core cuenta con un menú llamado SConfig desde el que podremos realizar fácilmente la configuración inicial de el equipo
+
+![SConfig](../doc/Server-Core/sconfig.jpg)
+
+### Red
+
+Para instalar la red seguiremos estos pasos, la configuración se realiza introduciendo una entrada desde el teclado y presionando intro para confirmar, la configuración de red es la número 8, por lo que habrá que escribir 8 y presionar intro.
+
+Una vez ahí elegiremos la interfaz, que queremos configurar escribiendo su número de índice y presionando intro.
+
+Ahí veremos tres opciones, la primera es para asignar **IP**, **máscara de red** y **puerta de enlace**, deberemos seleccionar la opción de IP estática. La configuración que he elegido yo ha sido:
+
+| IP        | Máscara de Red           | Gateway  |
+| ------------- |:-------------:| -----:|
+| 172.20.10.22      | 255.255.255.0 | 172.20.10.1 |
+
