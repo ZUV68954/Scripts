@@ -4,7 +4,6 @@
 
 En primer lugar crearemos una máquina nueva que será el futuro controlador de dominio principal. El nombre será **DC03-01.wargamesX**. Mantendremos la configuración por defecto que vCenter sugiere para Windows Server 2016 o versiones posteriores pero cambiando las opciones de disco duro a **aprovisionamiento fino** y la red a **PG-VLAN20**. Utilizaremos la última ISO del almacén para Windows Server 2022.
 
-<img src="../doc/Server-Core/creacion-maquina.jpg" alt="Imagen de las características de la máquina" height="700" width="500">
 [Imagen de las características de la máquina](../doc/Server-Core/creacion-maquina.jpg)
 
 Arrancaremos desde la imagen y cambiaremos la distribución de teclado, presionaremos Install, diremos que no tenemos clave de producto, elegiremos la versión **Windows Server 2022 Standard**, elegiremos la opción personalizada y el disco en el que se instalará Windows.
@@ -49,7 +48,18 @@ La configuración del escritorio remoto será tanto de lo mismo, presionaremos e
 ### VMware Tools
 
 Presionaremos en *Instalar VMware Tools…* en vCenter, esto nos montará el disco de las tools.
+
 [VMware Tools](../doc/Server-Core/tools.jpg)
 
 
-Ahora en 
+Ahora en el servidor instalaremos las Tools de la siguiente forma:
+
+* Abriremos PowerShell (15).
+* Abriremos la unidad de disco que por defecto será D:, en caso de que no lo fuere, es posible listar los volúmenes montados en Windows con el siguente comando: *Get-PSDrive -PSProvider 'FileSystem'*.
+* Ejecutaremos la instalación con *.\setup.exe*.
+* Nos dejaremos guiar por el isntalador gráfico y reiniciaremos la máquina.
+
+
+## Promover a controlador
+
+Subiremos mediante RDP los scripts *parte1.ps1* y *parte2.ps1* al servidor, ahí los ejecutaremos y se terminará de configurar la máquina y también se unirá al dominio y se convertirá en controlador.

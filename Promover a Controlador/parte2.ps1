@@ -11,7 +11,6 @@ Add-WindowsFeature AD-Domain-Services, DNS
 $dominio = Read-Host 'Nombre de dominio'
 $admin = Read-Host 'Usuario administrador'
 
-Add-WindowsFeature AD-Domain-Services, DNS
 Install-ADDSDomainController `
  -DomainName "$dominio" `
  -Credential (Get-Credential "$dominio\$admin") `

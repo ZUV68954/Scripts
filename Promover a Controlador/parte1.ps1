@@ -14,8 +14,10 @@ Start-Sleep -Seconds 3
 $hostname = HOSTNAME.EXE
 $dominio = Read-Host "Introduzca el nombre de dominio"
 $nombre = Read-Host "Introduzca un nuevo nombre para el servidor"
+$nombre = Read-Host "Introduzca las credenciales de dominio"
+Start-Sleep -Seconds 1
 
 Add-Computer -ComputerName $hostname -DomainName $dominio -NewName $nombre -Credential $dominio\Administrator -Restart
 
-Write-Output "Añadido al dominio $dominio."
+Write-Output "Unido al dominio $dominio."
 Start-Sleep -Seconds 3
