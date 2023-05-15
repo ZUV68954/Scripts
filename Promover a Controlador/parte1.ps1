@@ -6,7 +6,7 @@ $error.clear()
 $ErrorActionPreference = "Stop"
 
 #
-## Configurar zona horaria a UTC
+## Configurar zona horaria a hora española
 #
 
 $zona = Get-TimeZone | Select-Object -Property Id
