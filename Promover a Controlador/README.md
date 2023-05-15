@@ -95,4 +95,18 @@ El resultado deberá ser similar a este, *(mi controlador se llama DC-Core)*:
 
 ## Degradar el controlador de dominio
 
-Para degradar el controlador de dominio será necesario quitarle los roles al servidor, de forma automática Windows nos dirá que degrademos el controlador
+Para degradar el controlador de dominio será necesario quitarle los roles al servidor, de forma automática Windows nos dirá que degrademos el controlador.
+
+![Remove](../doc/Server-Core/remove.jpg)
+
+Presionaremos en *Active Directory Domain Services* y ahí nos saldrá un mensaje de error indicándonos que debemos degradar el controlador, será lo que haremos.
+
+![Demote](../doc/Server-Core/demote.jpg)
+
+Dejaremos todas las opciones por defecto salvo la de *Remove DNS delegation*. Si nos encontramos con que no podemos avanzar en el wizard, es posible que debamos forzar al controlador de dominio, la opción está en la primera pestaña.
+
+![Credenciales](../doc/Server-Core/credenciales.jpg)
+
+## Limpiar metadatos ?
+
+Aún queda esclarecer si se debe hacer esto -_-.
