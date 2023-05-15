@@ -2,7 +2,7 @@
 
 ## Instalación de Windows Server Core
 
-En primer lugar crearemos una máquina nueva que será el futuro controlador de dominio principal. El nombre será **DC03-01.wargamesX**. Mantendremos la configuración por defecto que vCenter sugiere para Windows Server 2016 o versiones posteriores pero cambiando las opciones de disco duro a **aprovisionamiento fino** y la red a **PG-VLAN20**. Utilizaremos la última ISO del almacén para Windows Server 2022.
+En primer lugar, crearemos una máquina nueva que será el futuro controlador de dominio principal. El nombre será **DC03-01.wargamesX**. Mantendremos la configuración por defecto que vCenter sugiere para Windows Server 2016 o versiones posteriores pero cambiando las opciones de disco duro a **aprovisionamiento fino** y la red a **PG-VLAN20**. Utilizaremos la última ISO del almacén para Windows Server 2022.
 
 ![Imagen de las características de la máquina](../doc/Server-Core/creacion-maquina.jpg)
 
@@ -19,9 +19,9 @@ Arrancaremos desde la imagen y cambiaremos la distribución de teclado, presiona
 
 ## Post-Instalación
 
-Una vez terminada la instalación, habrá que coonfigurar la red, habilitar el escritorio remoto (para poder subir los scripts) e instalar las Tools de VMware.
+Una vez terminada la instalación, habrá que configurar la red, habilitar el escritorio remoto (para poder subir los scripts) e instalar las Tools de VMware.
 
-Windows Server Core cuenta con un menú llamado SConfig desde el que podremos realizar fácilmente la configuración inicial de el equipo
+Windows Server Core cuenta con un menú llamado SConfig desde el que podremos realizar fácilmente la configuración inicial del equipo.
 
 ![SConfig](../doc/Server-Core/sconfig.jpg)
 
@@ -76,6 +76,23 @@ Subiremos mediante RDP los scripts *parte1.ps1* y *parte2.ps1* al servidor, ahí
 ## Cambio en los Roles Maestros
 
 Bastará con seguir la siguiente [guía de Microsoft](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/upgrade-domain-controllers#:~:text=Add%20a%20new%20domain%20controller%20with%20a%20newer%20version%20of%20Windows%20Server), de ella tomaremos este comando, en el que **"DC03-10"** es el nombre del servidor al que queremos transferir los roles maestros:
+**ES OBLIGATORIO UTILIZAR EL MÓDULO DE ACTIVE DIRECTORY PARA POWERSHELL**
 ```PowerShell
 Move-ADDirectoryServerOperationMasterRole -Identity "DC03-10" -OperationMasterRole 0,1,2,3,4
 ```
+
+Podremos comprobar que los roles maestros han cambiado con los siguentes comandos:
+```PowerShell
+Get-ADDomain | FL InfrastructureMaster, RIDMaster, PDCEmulator
+```
+```PowerShell
+Get-ADForest | FL DomainNamingMaster, SchemaMaster
+```
+
+El resultado deberá ser similar a este, *(mi controlador se llama DC-Core)*:
+
+![Cambio-rol-maestro](../doc/Server-Core/roles-cambiados.jpg)
+
+## Degradar el controlador de dominio
+
+Para degradar el controlador de dominio será necesario quitarle los roles al servidor, de forma automática Windows nos dirá que degrademos el controlador

@@ -1,10 +1,22 @@
 #
+## Gestión de errores
+#
+
+$error.clear()
+$ErrorActionPreference = "Stop"
+
+#
 ## Configurar zona horaria a UTC
 #
 
-Set-TimeZone -Id "Romance Standard Time"
-
-Write-Output "Zona horaria cambiada."
+$zona = Get-TimeZone | Select-Object -Property Id
+try {
+    if ( "Romance Standard Time" -eq $zona) {
+        Set-TimeZone -Id "Romance Standard Time"
+    }
+}
+catch { "Ha ocurrido el siguente error a la hora de cambiar la zona horaria: $error"; exit}
+if (!$error) { "Zona horaria correcta."}
 Start-Sleep -Seconds 3
 
 #
@@ -16,8 +28,9 @@ $dominio = Read-Host "Introduzca el nombre de dominio"
 $nombre = Read-Host "Introduzca un nuevo nombre para el servidor"
 $nombre = Read-Host "Introduzca las credenciales de dominio"
 Start-Sleep -Seconds 1
-
+try {
 Add-Computer -ComputerName $hostname -DomainName $dominio -NewName $nombre -Credential $dominio\Administrator -Restart
-
-Write-Output "Unido al dominio $dominio."
+}
+catch { "Error a la hora de unirse al dominio: $error"; exit}
+if (!$error) { "Unido correctamente al dominio $dominio." }
 Start-Sleep -Seconds 3
