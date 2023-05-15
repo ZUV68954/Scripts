@@ -39,6 +39,15 @@ Ahí veremos tres opciones, la primera es para asignar **IP**, **máscara de red
 
 Luego en la segunda opción, elegiremos como servidores DNS a los controladores de dominio ya existentes, **si no lo hacemos la máquina no podrá resolver el dominio ni unirse a él.**
 
+Existe la posibilidad de que la máquina sea incapaz de liberar el DHCP de forma automática, en ese caso podremos utilizar los siguientes comandos para desactivar el DHCP y configurar la dirección IP.
+
+```PowerShell
+Remove-NetIPAddress -InterfaceAlias Ethernet0 -confirm:$False
+```
+```PowerShell
+New-NetIPAddress -InterfaceAlias Ethernet0 -IPAddress 172.20.10.22 -PrefixLength 24 -DefaultGateway 172.20.10.1
+```
+
 
 ### Escritorio Remoto
 
