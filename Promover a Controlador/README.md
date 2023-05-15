@@ -4,7 +4,7 @@
 
 En primer lugar crearemos una máquina nueva que será el futuro controlador de dominio principal. El nombre será **DC03-01.wargamesX**. Mantendremos la configuración por defecto que vCenter sugiere para Windows Server 2016 o versiones posteriores pero cambiando las opciones de disco duro a **aprovisionamiento fino** y la red a **PG-VLAN20**. Utilizaremos la última ISO del almacén para Windows Server 2022.
 
-[Imagen de las características de la máquina](../doc/Server-Core/creacion-maquina.jpg)
+![Imagen de las características de la máquina](../doc/Server-Core/creacion-maquina.jpg)
 
 Arrancaremos desde la imagen y cambiaremos la distribución de teclado, presionaremos Install, diremos que no tenemos clave de producto, elegiremos la versión **Windows Server 2022 Standard**, elegiremos la opción personalizada y el disco en el que se instalará Windows.
 
@@ -49,7 +49,7 @@ La configuración del escritorio remoto será tanto de lo mismo, presionaremos e
 
 Presionaremos en *Instalar VMware Tools…* en vCenter, esto nos montará el disco de las tools.
 
-[VMware Tools](../doc/Server-Core/tools.jpg)
+![VMware Tools](../doc/Server-Core/tools.jpg)
 
 
 Ahora en el servidor instalaremos las Tools de la siguiente forma:
@@ -63,3 +63,10 @@ Ahora en el servidor instalaremos las Tools de la siguiente forma:
 ## Promover a controlador
 
 Subiremos mediante RDP los scripts *parte1.ps1* y *parte2.ps1* al servidor, ahí los ejecutaremos y se terminará de configurar la máquina y también se unirá al dominio y se convertirá en controlador.
+
+## Cambio en los Roles Maestros
+
+Bastará con seguir la siguiente [guía de Microsoft](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/upgrade-domain-controllers#:~:text=Add%20a%20new%20domain%20controller%20with%20a%20newer%20version%20of%20Windows%20Server), de ella tomaremos este comando:
+```PowerShell
+PowerShell <(Move-ADDirectoryServerOperationMasterRole -Identity "DC03-10" -OperationMasterRole 0,1,2,3,4)
+```
