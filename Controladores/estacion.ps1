@@ -15,7 +15,7 @@ $ErrorActionPreference = "Stop"
 
 $admin = [Security.Principal.WindowsIdentity]::GetCurrent().Groups -contains 'S-1-5-32-544'
 
-if ($admin = "True") {
+if ($admin -eq "True") {
     #
     ## Instalar el paquete de idioma necesario.
     #
@@ -32,13 +32,16 @@ if ($admin = "True") {
             }
             if (!$error) { "Paquetes de idiomas instalados correctamente." }
         }
-    try {
+    #
+    ## Instalar RSAT
+    #
+        try {
         Get-WindowsCapability -Name RSAT* -Online | Add-WindowsCapability –Online
-    }
-    catch {
-        "Error a la hora de instalar RSAT: $error"; exit
-    }
-    if (!$error) { "RSAT instalados correctamente." }
+        }
+        catch {
+            "Error a la hora de instalar RSAT: $error"; exit
+        }
+        if (!$error) { "RSAT instalados correctamente." }
   } else {
     Write-Output "Es necesario ejecutar este script como administrador."
   }
