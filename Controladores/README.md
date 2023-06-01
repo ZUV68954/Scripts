@@ -93,7 +93,60 @@ El resultado deberá ser similar a este, *(mi controlador se llama DC-Core)*:
 
 ![Cambio-rol-maestro](../doc/Server-Core/roles-cambiados.jpg)
 
-## Degradar el controlador de dominio
+
+## Instalar herramientas de administración en la estación.
+
+Bastará con ejecutar el siguiente script en una máquina unida a nuestro dominio:
+
+```PowerShell
+#
+## Script para configurar la estación.
+#
+
+#
+## Gestión de errores
+#
+
+$error.clear()
+$ErrorActionPreference = "Stop"
+
+#
+## Comprobar si el script se está ejecutando como administrador.
+#
+
+$admin = [Security.Principal.WindowsIdentity]::GetCurrent().Groups -contains 'S-1-5-32-544'
+
+if ($admin = "True") {
+    #
+    ## Instalar el paquete de idioma necesario.
+    #
+
+    if (Get-InstalledLanguage -Language en-US) {
+        Write-Output "Todos los paquetes de idiomas necesarios están instalados."
+    } else {
+            Write-Output "Instalando paquete de idiomas de Estados Unidos."
+            try {
+                Install-Language en-US
+            }
+            catch {
+                "Error a la hora de instalar el paquete de idiomas: $error"; exit
+            }
+            if (!$error) { "Paquetes de idiomas instalados correctamente." }
+        }
+    try {
+        Get-WindowsCapability -Name RSAT* -Online | Add-WindowsCapability –Online
+    }
+    catch {
+        "Error a la hora de instalar RSAT: $error"; exit
+    }
+    if (!$error) { "RSAT instalados correctamente." }
+  } else {
+    Write-Output "Es necesario ejecutar este script como administrador."
+  }
+```
+## Degradar el controlador de dominio.
+
+**A continuación se explica como degradar el controlador de dominio, sin embargo, parece ser que se crean errores sin previo aviso que terminan impidiendo que el dominio funcione, se recomienda no degradar ningún controlador.**
 
 Para degradar el controlador de dominio será necesario quitarle los roles al servidor, de forma automática Windows nos dirá que degrademos el controlador.
 

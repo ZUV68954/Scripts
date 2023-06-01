@@ -1,7 +1,7 @@
 #
 ## Gestión de errores
 #
-#Ayuda me han quitado el cable de red.
+
 $error.clear()
 $ErrorActionPreference = "Stop"
 
