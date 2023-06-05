@@ -64,7 +64,10 @@ Presionaremos en *Instalar VMware Tools…* en vCenter, esto nos montará el dis
 Ahora en el servidor instalaremos las Tools de la siguiente forma:
 
 * Abriremos PowerShell (15).
-* Abriremos la unidad de disco que por defecto será D:, en caso de que no lo fuere, es posible listar los volúmenes montados en Windows con el siguente comando: *Get-PSDrive -PSProvider 'FileSystem'*.
+* Abriremos la unidad de disco que por defecto será D:, en caso de que no lo fuere, es posible listar los volúmenes montados en Windows con el siguiente comando:
+```PowerShell
+Get-PSDrive -PSProvider 'FileSystem'
+```
 * Ejecutaremos la instalación con *.\setup.exe*.
 * Nos dejaremos guiar por el isntalador gráfico y reiniciaremos la máquina.
 
@@ -72,7 +75,80 @@ Ahora en el servidor instalaremos las Tools de la siguiente forma:
 ## Promover a controlador
 
 Subiremos mediante RDP los scripts *parte1.ps1* y *parte2.ps1* al servidor, ahí los ejecutaremos y se terminará de configurar la máquina y también se unirá al dominio y se convertirá en controlador.
+*parte1.ps1*:
+```PowerShell
+#
+## Gestión de errores
+#
 
+$error.clear()
+$ErrorActionPreference = "Stop"
+
+#
+## Configurar zona horaria a hora española
+#
+
+$zona = Get-TimeZone | Select-Object -Property Id
+try {
+    if ( "Romance Standard Time" -eq $zona) {
+        Set-TimeZone -Id "Romance Standard Time"
+    }
+}
+catch { "Ha ocurrido el siguente error a la hora de cambiar la zona horaria: $error"; exit}
+if (!$error) { "Zona horaria correcta."}
+Start-Sleep -Seconds 3
+
+#
+## Añadir al dominio
+#
+
+$hostname = HOSTNAME.EXE
+$dominio = Read-Host "Introduzca el nombre de dominio"
+$nombre = Read-Host "Introduzca un nuevo nombre para el servidor"
+Start-Sleep -Seconds 1
+try {
+Add-Computer -ComputerName $hostname -DomainName $dominio -NewName $nombre -Credential $dominio\Administrator -Restart
+}
+catch { "Error a la hora de unirse al dominio: $error"; exit}
+if (!$error) { "Unido correctamente al dominio $dominio." }
+Start-Sleep -Seconds 3
+```
+
+*parte2.ps1*:
+```PowerShell
+#
+## Gestión de errores
+#
+
+$error.clear()
+$ErrorActionPreference = "Stop"
+
+#
+## Añadir roles de Controlador
+#
+try {
+Add-WindowsFeature AD-Domain-Services, DNS
+}
+catch { "Error a la hora instalar los roles de controlador: $error"; exit}
+if (!$error) { "Roles de controlador instalados correctamente."}
+
+#
+# Configuración como controlador de dominio.
+#
+
+$dominio = Read-Host 'Nombre de dominio'
+$admin = Read-Host 'Usuario administrador'
+
+try {
+    Install-ADDSDomainController `
+    -DomainName "$dominio" `
+    -Credential (Get-Credential "$dominio\$admin") `
+    -InstallDns:$true
+}
+catch { "Error a la hora de promover el controlador de dominio: $error; exit" }
+if (!$error) { "Configurado como controlador de dominio en $dominio." }
+Start-Sleep -Seconds 3
+```
 ## Cambio en los Roles Maestros
 
 Bastará con seguir la siguiente [guía de Microsoft](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/upgrade-domain-controllers#:~:text=Add%20a%20new%20domain%20controller%20with%20a%20newer%20version%20of%20Windows%20Server), de ella tomaremos este comando, en el que **"DC03-10"** es el nombre del servidor al que queremos transferir los roles maestros, los comandos habrá que ponerlos en el servidor que posea los roles maestros:
