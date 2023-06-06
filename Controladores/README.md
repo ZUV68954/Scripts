@@ -77,11 +77,11 @@ Get-PSDrive -PSProvider 'FileSystem'
 Subiremos mediante RDP los scripts *parte1.ps1* y *parte2.ps1* al servidor, ahí los ejecutaremos y se terminará de configurar la máquina y también se unirá al dominio y se convertirá en controlador.
 *parte1.ps1*:
 
-[Parte1](./parte1.ps1)
+[Parte 1](./parte1.ps1)
 
 *parte2.ps1*:
 
-![Remove](./parte2.ps1)
+[Parte 2](./parte2.ps1)
 
 ## Cambio en los Roles Maestros
 
@@ -108,7 +108,7 @@ El resultado deberá ser similar a este, *(mi controlador se llama DC-Core)*:
 
 Bastará con ejecutar el siguiente script en una máquina unida a nuestro dominio:
 
-![Remove](./estacion.ps1)
+[Script estación](./estacion.ps1)
 
 ## Degradar el controlador de dominio.
 
