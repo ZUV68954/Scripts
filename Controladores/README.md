@@ -76,79 +76,13 @@ Get-PSDrive -PSProvider 'FileSystem'
 
 Subiremos mediante RDP los scripts *parte1.ps1* y *parte2.ps1* al servidor, ahí los ejecutaremos y se terminará de configurar la máquina y también se unirá al dominio y se convertirá en controlador.
 *parte1.ps1*:
-```PowerShell
-#
-## Gestión de errores
-#
 
-$error.clear()
-$ErrorActionPreference = "Stop"
-
-#
-## Configurar zona horaria a hora española
-#
-
-$zona = Get-TimeZone | Select-Object -Property Id
-try {
-    if ( "Romance Standard Time" -eq $zona) {
-        Set-TimeZone -Id "Romance Standard Time"
-    }
-}
-catch { "Ha ocurrido el siguente error a la hora de cambiar la zona horaria: $error"; exit}
-if (!$error) { "Zona horaria correcta."}
-Start-Sleep -Seconds 3
-
-#
-## Añadir al dominio
-#
-
-$hostname = HOSTNAME.EXE
-$dominio = Read-Host "Introduzca el nombre de dominio"
-$nombre = Read-Host "Introduzca un nuevo nombre para el servidor"
-Start-Sleep -Seconds 1
-try {
-Add-Computer -ComputerName $hostname -DomainName $dominio -NewName $nombre -Credential $dominio\Administrator -Restart
-}
-catch { "Error a la hora de unirse al dominio: $error"; exit}
-if (!$error) { "Unido correctamente al dominio $dominio." }
-Start-Sleep -Seconds 3
-```
+![Remove](./parte1.ps1)
 
 *parte2.ps1*:
-```PowerShell
-#
-## Gestión de errores
-#
 
-$error.clear()
-$ErrorActionPreference = "Stop"
+![Remove](./parte2.ps1)
 
-#
-## Añadir roles de Controlador
-#
-try {
-Add-WindowsFeature AD-Domain-Services, DNS
-}
-catch { "Error a la hora instalar los roles de controlador: $error"; exit}
-if (!$error) { "Roles de controlador instalados correctamente."}
-
-#
-# Configuración como controlador de dominio.
-#
-
-$dominio = Read-Host 'Nombre de dominio'
-$admin = Read-Host 'Usuario administrador'
-
-try {
-    Install-ADDSDomainController `
-    -DomainName "$dominio" `
-    -Credential (Get-Credential "$dominio\$admin") `
-    -InstallDns:$true
-}
-catch { "Error a la hora de promover el controlador de dominio: $error; exit" }
-if (!$error) { "Configurado como controlador de dominio en $dominio." }
-Start-Sleep -Seconds 3
-```
 ## Cambio en los Roles Maestros
 
 Bastará con seguir la siguiente [guía de Microsoft](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/upgrade-domain-controllers#:~:text=Add%20a%20new%20domain%20controller%20with%20a%20newer%20version%20of%20Windows%20Server), de ella tomaremos este comando, en el que **"DC03-10"** es el nombre del servidor al que queremos transferir los roles maestros, los comandos habrá que ponerlos en el servidor que posea los roles maestros:
@@ -174,52 +108,8 @@ El resultado deberá ser similar a este, *(mi controlador se llama DC-Core)*:
 
 Bastará con ejecutar el siguiente script en una máquina unida a nuestro dominio:
 
-```PowerShell
-#
-## Script para configurar la estación.
-#
+![Remove](./estacion.ps1)
 
-#
-## Gestión de errores
-#
-
-$error.clear()
-$ErrorActionPreference = "Stop"
-
-#
-## Comprobar si el script se está ejecutando como administrador.
-#
-
-$admin = [Security.Principal.WindowsIdentity]::GetCurrent().Groups -contains 'S-1-5-32-544'
-
-if ($admin = "True") {
-    #
-    ## Instalar el paquete de idioma necesario.
-    #
-
-    if (Get-InstalledLanguage -Language en-US) {
-        Write-Output "Todos los paquetes de idiomas necesarios están instalados."
-    } else {
-            Write-Output "Instalando paquete de idiomas de Estados Unidos."
-            try {
-                Install-Language en-US
-            }
-            catch {
-                "Error a la hora de instalar el paquete de idiomas: $error"; exit
-            }
-            if (!$error) { "Paquetes de idiomas instalados correctamente." }
-        }
-    try {
-        Get-WindowsCapability -Name RSAT* -Online | Add-WindowsCapability –Online
-    }
-    catch {
-        "Error a la hora de instalar RSAT: $error"; exit
-    }
-    if (!$error) { "RSAT instalados correctamente." }
-  } else {
-    Write-Output "Es necesario ejecutar este script como administrador."
-  }
-```
 ## Degradar el controlador de dominio.
 
 **A continuación se explica como degradar el controlador de dominio, sin embargo, parece ser que se crean errores sin previo aviso que terminan impidiendo que el dominio funcione, se recomienda no degradar ningún controlador.**
