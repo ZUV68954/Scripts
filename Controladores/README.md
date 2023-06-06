@@ -77,7 +77,7 @@ Get-PSDrive -PSProvider 'FileSystem'
 Subiremos mediante RDP los scripts *parte1.ps1* y *parte2.ps1* al servidor, ahí los ejecutaremos y se terminará de configurar la máquina y también se unirá al dominio y se convertirá en controlador.
 *parte1.ps1*:
 
-![Remove](./parte1.ps1)
+[Parte1](./parte1.ps1)
 
 *parte2.ps1*:
 
